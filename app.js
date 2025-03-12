@@ -11,10 +11,16 @@ function displayCategories(categories) {
     let section = document.getElementsByClassName('category flex flex-col md:flex-row justify-center items-center gap-[23px] my-[32px]')
 
     section[0].innerHTML += `
-    <button class="btn btn-sm">${el.category}</button>
+    <button onclick="categoriesVideo(${el.category_id})" class="btn btn-sm">${el.category}</button>
     `
   })
 
+}
+
+function categoriesVideo(id) {
+  const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
+
+  fetch(url).then(res => res.json()).then(data => displayVideos(data.category))
 }
 
 function loadVideos() {
@@ -26,8 +32,8 @@ function loadVideos() {
 function displayVideos(videos) {
 
   let cardConatiner = document.getElementsByClassName('grid grid-cols-4 gap-[24px]')
-
-  videos.map(el => {
+  cardConatiner[0].innerHTML = ``;
+  videos.forEach(el => {
 
     cardConatiner[0].innerHTML += `
     <div class="card bg-base-100 p-0">
@@ -72,7 +78,7 @@ function displayVideos(videos) {
 }
 
 loadCategory();
-loadVideos();
+
 
 
 // "category_id": "1001",
