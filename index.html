@@ -50,14 +50,28 @@
       </nav>
     </header>
     <!-- Category section -->
-    <main class="w-11/12 max-w-[1440px] mx-auto mb-[124px]">
+    <main class="w-11/12 max-w-[1440px] mx-auto mb-[124px] relative">
       <section
         class="category flex flex-col md:flex-row justify-center items-center gap-[23px] my-[32px]">
         <button id="all" onclick="loadVideos()" class="btn btn-sm">All</button>
       </section>
 
+      <!-- Loader -->
+      <div
+        id="loader"
+        class="absolute top-[300px] left-[50%] transform translate-x-[-50%] hidden z-50">
+        <span class="loading loading-dots loading-xl w-[50px]"></span>
+      </div>
       <!-- video cards  container-->
       <div class="grid grid-cols-4 gap-[24px]"></div>
+      <!-- no video container -->
+      <div class="flex flex-col items-center justify-center mt-[100px]">
+        <img class="size-[140px]" src="./Icon.png" alt="" />
+        <h1 class="text-center mt-[25px] font-bold text-[32px]">
+          Oops!! Sorry, There is no <br />
+          content here
+        </h1>
+      </div>
 
       <!-- modal -->
       <div id="modal">

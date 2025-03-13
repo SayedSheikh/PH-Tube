@@ -1,3 +1,10 @@
+function loadingOn() {
+  document.getElementById('loader').classList.remove('hidden')
+}
+function loadingOff() {
+  document.getElementById('loader').classList.add('hidden')
+}
+
 function loadCategory() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     .then(res => res.json())
@@ -27,6 +34,7 @@ function displayCategories(categories) {
 }
 
 function categoriesVideo(id) {
+  loadingOn();
   const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
 
   fetch(url).then(res => res.json()).then(data => {
@@ -40,6 +48,7 @@ function categoriesVideo(id) {
 }
 
 function loadVideos(title = '') {
+  loadingOn();
   fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${title}`)
     .then(res => res.json())
     .then(data => {
@@ -57,8 +66,15 @@ function displayVideos(videos) {
 
   let cardConatiner = document.getElementsByClassName('grid grid-cols-4 gap-[24px]')
   cardConatiner[0].innerHTML = ``;
-  videos.forEach(el => {
 
+  if (!videos.length) {
+    noContainShow("noContent");
+    loadingOff();
+    return;
+  }
+  noContainShow("Content");
+  videos.forEach(el => {
+    loadingOff();
     cardConatiner[0].innerHTML += `
     <div class="card bg-base-100 p-0">
           <figure class="">
@@ -100,11 +116,13 @@ function displayVideos(videos) {
           </div>
         </div>
     `
+
   })
 
 }
 
 function loadVideoDetails(id) {
+  loadingOn();
   // console.log(id);
   fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${id}`)
     .then(res => res.json())
@@ -112,8 +130,9 @@ function loadVideoDetails(id) {
 }
 
 function loadDetailsModal(video) {
-  console.log(video);
+  // console.log(video);
   let modal = document.getElementById('my_modal_1')
+  loadingOff();
   modal.showModal();
   modal.innerHTML += `
           <div class="modal-box">
@@ -131,10 +150,23 @@ function loadDetailsModal(video) {
 }
 
 document.getElementById('search-input').addEventListener('keyup', (el) => {
+  loadingOn();
   loadVideos(el.target.value);
 })
 
+
+function noContainShow(todo) {
+  if (todo === "noContent") {
+
+    document.getElementsByClassName('flex flex-col items-center justify-center mt-[100px]')[0].classList.remove('hidden');
+  }
+  else {
+    document.getElementsByClassName('flex flex-col items-center justify-center mt-[100px]')[0].classList.add('hidden');
+  }
+}
+
 loadCategory();
+// noContainShow();
 
 
 
