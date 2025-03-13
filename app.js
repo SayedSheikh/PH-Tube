@@ -4,6 +4,15 @@ function loadCategory() {
     .then(data => displayCategories(data.categories))
 }
 
+function removeActiveBtns() {
+  let activeBtns = document.getElementsByClassName('active');
+
+  for (btn of activeBtns) {
+    btn.classList.remove('bg-[#FF1F3D]', 'text-white', 'active');
+  }
+
+}
+
 function displayCategories(categories) {
 
   categories.forEach((el) => {
@@ -11,7 +20,7 @@ function displayCategories(categories) {
     let section = document.getElementsByClassName('category flex flex-col md:flex-row justify-center items-center gap-[23px] my-[32px]')
 
     section[0].innerHTML += `
-    <button onclick="categoriesVideo(${el.category_id})" class="btn btn-sm">${el.category}</button>
+    <button id=id-${el.category_id} onclick="categoriesVideo(${el.category_id})" class="btn btn-sm">${el.category}</button>
     `
   })
 
@@ -20,13 +29,28 @@ function displayCategories(categories) {
 function categoriesVideo(id) {
   const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
 
-  fetch(url).then(res => res.json()).then(data => displayVideos(data.category))
+  fetch(url).then(res => res.json()).then(data => {
+
+    removeActiveBtns();
+
+    let activeBtn = document.getElementById(`id-${id}`);
+    activeBtn.classList.add('bg-[#FF1F3D]', 'text-white', 'active')
+    displayVideos(data.category)
+  })
 }
 
-function loadVideos() {
-  fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+function loadVideos(title = '') {
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${title}`)
     .then(res => res.json())
-    .then(data => displayVideos(data.videos))
+    .then(data => {
+
+      removeActiveBtns();
+      // code here
+      let activeBtn = document.getElementById("all");
+      activeBtn.classList.add('bg-[#FF1F3D]', 'text-white', 'active');
+
+      displayVideos(data.videos)
+    })
 }
 
 function displayVideos(videos) {
@@ -71,11 +95,44 @@ function displayVideos(videos) {
               <h3 class="text-[14px] text-[#17171770]">${el.others.views}</h3>
             </div>
           </div>
+          <div>
+          <button id=${el.video_id} onclick="loadVideoDetails('${el.video_id}')" class="btn p-0 w-full mt-[10px] mb-[15px]">Details</button>
+          </div>
         </div>
     `
   })
 
 }
+
+function loadVideoDetails(id) {
+  // console.log(id);
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${id}`)
+    .then(res => res.json())
+    .then(data => loadDetailsModal(data.video));
+}
+
+function loadDetailsModal(video) {
+  console.log(video);
+  let modal = document.getElementById('my_modal_1')
+  modal.showModal();
+  modal.innerHTML += `
+          <div class="modal-box">
+            <h3 class="text-lg font-bold">${video.title}</h3>
+            <p class="py-4">${video.description}</p>
+            <div class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+              </form>
+            </div>
+          </div>
+  `
+
+}
+
+document.getElementById('search-input').addEventListener('keyup', (el) => {
+  loadVideos(el.target.value);
+})
 
 loadCategory();
 
