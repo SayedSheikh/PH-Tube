@@ -132,8 +132,10 @@ function loadVideoDetails(id) {
 function loadDetailsModal(video) {
   // console.log(video);
   let modal = document.getElementById('my_modal_1')
+
   loadingOff();
   modal.showModal();
+  modal.innerHTML = "";
   modal.innerHTML += `
           <div class="modal-box">
             <h3 class="text-lg font-bold">${video.title}</h3>
